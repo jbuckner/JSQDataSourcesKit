@@ -109,7 +109,9 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
 
     private func bridgedCollectionFetchedResultsDelegate() -> BridgedFetchedResultsDelegate {
         let delegate = BridgedFetchedResultsDelegate(
-            willChangeContent: { _ in },
+            willChangeContent: { _ in
+              debugPrint("FRD, willChangeContent")
+            },
             didChangeSection: { [unowned self] _, _, sectionIndex, changeType in
 
                 let section = IndexSet(integer: sectionIndex)
