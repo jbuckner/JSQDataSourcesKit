@@ -90,6 +90,8 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
 
     private func performCollectionViewUpdates() {
       self.collectionView?.performBatchUpdates({ [weak self] in
+          debugPrint("FRD, performBatchUpdates")
+
           // apply object changes
           while let objectChange = self?.objectChanges.safeDequeue() {
             objectChange()
@@ -114,9 +116,11 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
                 self.sectionChanges.enqueue { [unowned self] in
                     switch changeType {
                     case .insert:
+                        debugPrint("FRD, insertSections", section)
                         self.collectionView?.insertSections(section)
 
                     case .delete:
+                        debugPrint("FRD, deleteSections", section)
                         self.collectionView?.deleteSections(section)
 
                     default:
@@ -130,6 +134,7 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
                 case .insert:
                     if let insertIndexPath = newIndexPath {
                         self.objectChanges.enqueue { [unowned self] in
+                            debugPrint("FRD, insertItems", insertIndexPath)
                             self.collectionView?.insertItems(at: [insertIndexPath])
                         }
                     }
@@ -137,6 +142,7 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
                 case .delete:
                     if let deleteIndexPath = indexPath {
                         self.objectChanges.enqueue { [unowned self] in
+                            debugPrint("FRD, deleteItems", deleteIndexPath)
                             self.collectionView?.deleteItems(at: [deleteIndexPath])
                         }
                     }
@@ -147,6 +153,7 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
                             if let item = anyObject as? Item,
                                 let collectionView = self.collectionView,
                                 let cell = collectionView.cellForItem(at: indexPath) as? CellConfig.View {
+                                debugPrint("FRD, configure", indexPath)
                                 self.cellConfig.configure(view: cell, item: item, type: .cell, parentView: collectionView, indexPath: indexPath)
                             }
                         }
@@ -155,6 +162,7 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
                 case .move:
                     if let old = indexPath, let new = newIndexPath {
                         self.objectChanges.enqueue { [unowned self] in
+                            debugPrint("FRD, move", old, new)
                             self.collectionView?.deleteItems(at: [old])
                             self.collectionView?.insertItems(at: [new])
                         }
