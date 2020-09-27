@@ -155,7 +155,7 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
                             if let item = anyObject as? Item,
                                 let collectionView = self.collectionView,
                                 let cell = collectionView.cellForItem(at: indexPath) as? CellConfig.View {
-                                debugPrint("FRD, configure", indexPath)
+                                debugPrint("FRD, configure", indexPath, cell, item)
                                 self.cellConfig.configure(view: cell, item: item, type: .cell, parentView: collectionView, indexPath: indexPath)
                             }
                         }
