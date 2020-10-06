@@ -131,7 +131,7 @@
 		887DD07A1B3BAC6C00FC4BF1 = {
 			isa = PBXGroup;
 			children = (
-				88DCAD241CB87CB400C018AF /* Source */,
+				88DCAD241CB87CB400C018AF /* Sources */,
 				88DCAD381CB87CB400C018AF /* Tests */,
 				887DD0851B3BAC6C00FC4BF1 /* Products */,
 			);
@@ -155,7 +155,27 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		88DCAD241CB87CB400C018AF /* Source */ = {
+		88DCAD241CB87CB400C018AF /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				96BD014E252C0E0D00B538AA /* JSQDataSourcesKit */,
+				88DCAD2D1CB87CB400C018AF /* Info.plist */,
+				88DCAD2F1CB87CB400C018AF /* JSQDataSourcesKit.h */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		88DCAD381CB87CB400C018AF /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				88AD28AA1D1F99B3000492FC /* ExampleModel.xcodeproj */,
+				96BD0150252C0E2900B538AA /* JSQDataSourcesKit */,
+				88DCAD3E1CB87CB400C018AF /* Info.plist */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		96BD014E252C0E0D00B538AA /* JSQDataSourcesKit */ = {
 			isa = PBXGroup;
 			children = (
 				88C99A761CBB302600A9804A /* BridgedDataSource.swift */,
@@ -165,35 +185,31 @@
 				88B80CD71CBBF62A00EDF9D5 /* DataSourceProvider.swift */,
 				88253C531FFAF7730022FCA8 /* FetchedResultsController.swift */,
 				88DCAD2C1CB87CB400C018AF /* FetchedResultsDelegate.swift */,
-				88DCAD2D1CB87CB400C018AF /* Info.plist */,
-				88DCAD2F1CB87CB400C018AF /* JSQDataSourcesKit.h */,
 				88CFFD991CB977A100C4E9DD /* ReusableViewConfig.swift */,
 				88DCAD331CB87CB400C018AF /* Section.swift */,
 				1DD7AC5C1D86C4BC00B676A6 /* TableEditingController.swift */,
 				88DCAD351CB87CB400C018AF /* TitledSupplementaryView.swift */,
 				88DCAD371CB87CB400C018AF /* TitledSupplementaryViewConfig.swift */,
 			);
-			path = Source;
+			path = JSQDataSourcesKit;
 			sourceTree = "<group>";
 		};
-		88DCAD381CB87CB400C018AF /* Tests */ = {
+		96BD0150252C0E2900B538AA /* JSQDataSourcesKit */ = {
 			isa = PBXGroup;
 			children = (
-				88AD28AA1D1F99B3000492FC /* ExampleModel.xcodeproj */,
 				88C99A7A1CBB628A00A9804A /* BridgedDataSourceTests.swift */,
 				882CA4591D1D957A006112B9 /* BridgedFetchedResultsDelegateTests.swift */,
 				88DCAD391CB87CB400C018AF /* DataSourceProviderSubscriptTests.swift */,
 				88DCAD3A1CB87CB400C018AF /* DataSourceProviderTests.swift */,
 				882CA45E1D1EE1EA006112B9 /* DataSourceTests.swift */,
 				88AD28B51D1FA44A000492FC /* FetchedResultsDelegateTests.swift */,
-				88DCAD3E1CB87CB400C018AF /* Info.plist */,
 				88DCAD421CB87CB400C018AF /* SectionTests.swift */,
 				882CA4571D1D82E1006112B9 /* TestCase.swift */,
 				88DCAD3B1CB87CB400C018AF /* TestHelpers.swift */,
 				88DCAD441CB87CB400C018AF /* TitledSupplementaryViewConfigTests.swift */,
 				88DCAD451CB87CB400C018AF /* TitledSupplementaryViewTests.swift */,
 			);
-			path = Tests;
+			path = JSQDataSourcesKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

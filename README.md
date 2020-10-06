@@ -19,22 +19,10 @@ This library reduces the boilerplate code regarding the `UITableView`, `UICollec
 
 ## Installation
 
-#### [CocoaPods](https://cocoapods.org) (recommended)
-
-````ruby
-use_frameworks!
-
-# For latest release in cocoapods
-pod 'JSQDataSourcesKit'
-
-# Feeling adventurous? Get the latest on develop
-pod 'JSQDataSourcesKit', :git => 'https://github.com/jessesquires/JSQDataSourcesKit.git', :branch => 'develop'
-````
-
-#### [Carthage](https://github.com/Carthage/Carthage)
+#### Swift Package Manager
 
 ````bash
-github "jessesquires/JSQDataSourcesKit"
+https://github.com/jbuckner/JSQDataSourcesKit
 ````
 
 ## Documentation
