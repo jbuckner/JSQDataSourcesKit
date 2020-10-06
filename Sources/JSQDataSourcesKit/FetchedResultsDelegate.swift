@@ -18,6 +18,7 @@
 
 import CoreData
 import Foundation
+import Threading
 import UIKit
 
 /// A `FetchedResultsDelegateProvider` is responsible for providing a delegate object for an instance of `NSFetchedResultsController`.
@@ -49,8 +50,10 @@ public final class FetchedResultsDelegateProvider<CellConfig: ReusableViewConfig
 
     // MARK: Private, collection view properties
 
-    private lazy var sectionChanges = [() -> Void]()
-    private lazy var objectChanges = [() -> Void]()
+    private lazy var sectionChanges: ThreadedQueue<() -> Void> = ThreadedQueue<() -> Void>()
+    private lazy var objectChanges: ThreadedQueue<() -> Void> = ThreadedQueue<() -> Void>()
+
+    private var collectionViewUpdatePaused: Bool = false
 }
 
 extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UICollectionView {
@@ -66,6 +69,15 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
         self.init(cellConfig: cellConfig, cellParentView: collectionView)
     }
 
+    public func pauseCollectionViewUpdates() {
+        collectionViewUpdatePaused = true
+    }
+
+    public func resumeCollectionViewUpdates() {
+        performCollectionViewUpdates()
+        collectionViewUpdatePaused = false
+    }
+
     /// Returns the `NSFetchedResultsControllerDelegate` object for a collection view.
     public var collectionDelegate: NSFetchedResultsControllerDelegate {
         if bridgedDelegate == nil {
@@ -76,17 +88,30 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
 
     private var collectionView: UICollectionView? { cellParentView }
 
+    private func performCollectionViewUpdates() {
+      self.collectionView?.performBatchUpdates({ [weak self] in
+          // apply object changes
+          while let objectChange = self?.objectChanges.safeDequeue() {
+            objectChange()
+          }
+
+          // apply section changes
+          while let sectionChange = self?.sectionChanges.safeDequeue() {
+            sectionChange()
+          }
+
+          }, completion: { [weak self] _ in
+              self?.reloadSupplementaryViewsIfNeeded()
+      })
+    }
+
     private func bridgedCollectionFetchedResultsDelegate() -> BridgedFetchedResultsDelegate {
         let delegate = BridgedFetchedResultsDelegate(
-            willChangeContent: { [unowned self] _ in
-
-                self.sectionChanges.removeAll()
-                self.objectChanges.removeAll()
-            },
+            willChangeContent: { _ in },
             didChangeSection: { [unowned self] _, _, sectionIndex, changeType in
 
                 let section = IndexSet(integer: sectionIndex)
-                self.sectionChanges.append { [unowned self] in
+                self.sectionChanges.enqueue { [unowned self] in
                     switch changeType {
                     case .insert:
                         self.collectionView?.insertSections(section)
@@ -104,21 +129,21 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
                 switch changeType {
                 case .insert:
                     if let insertIndexPath = newIndexPath {
-                        self.objectChanges.append { [unowned self] in
+                        self.objectChanges.enqueue { [unowned self] in
                             self.collectionView?.insertItems(at: [insertIndexPath])
                         }
                     }
 
                 case .delete:
                     if let deleteIndexPath = indexPath {
-                        self.objectChanges.append { [unowned self] in
+                        self.objectChanges.enqueue { [unowned self] in
                             self.collectionView?.deleteItems(at: [deleteIndexPath])
                         }
                     }
 
                 case .update:
                     if let indexPath = indexPath {
-                        self.objectChanges.append { [unowned self] in
+                        self.objectChanges.enqueue { [unowned self] in
                             if let item = anyObject as? Item,
                                 let collectionView = self.collectionView,
                                 let cell = collectionView.cellForItem(at: indexPath) as? CellConfig.View {
@@ -129,7 +154,7 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
 
                 case .move:
                     if let old = indexPath, let new = newIndexPath {
-                        self.objectChanges.append { [unowned self] in
+                        self.objectChanges.enqueue { [unowned self] in
                             self.collectionView?.deleteItems(at: [old])
                             self.collectionView?.insertItems(at: [new])
                         }
@@ -140,16 +165,10 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
             },
             didChangeContent: { [unowned self] _ in
 
-                self.collectionView?.performBatchUpdates({ [weak self] in
-                    // apply object changes
-                    self?.objectChanges.forEach { $0() }
+                if self.collectionViewUpdatePaused { return }
 
-                    // apply section changes
-                    self?.sectionChanges.forEach { $0() }
+                self.performCollectionViewUpdates()
 
-                    }, completion: { [weak self] _ in
-                        self?.reloadSupplementaryViewsIfNeeded()
-                })
         })
 
         return delegate
