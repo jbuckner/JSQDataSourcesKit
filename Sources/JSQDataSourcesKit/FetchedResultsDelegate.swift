@@ -21,6 +21,11 @@ import Foundation
 import Threading
 import UIKit
 
+struct ChangeGroup {
+  let sectionChanges: ThreadedQueue<() -> Void> = ThreadedQueue<() -> Void>()
+  let objectChanges: ThreadedQueue<() -> Void> = ThreadedQueue<() -> Void>()
+}
+
 /// A `FetchedResultsDelegateProvider` is responsible for providing a delegate object for an instance of `NSFetchedResultsController`.
 public final class FetchedResultsDelegateProvider<CellConfig: ReusableViewConfigProtocol> {
 
@@ -50,8 +55,16 @@ public final class FetchedResultsDelegateProvider<CellConfig: ReusableViewConfig
 
     // MARK: Private, collection view properties
 
-    private lazy var sectionChanges: ThreadedQueue<() -> Void> = ThreadedQueue<() -> Void>()
-    private lazy var objectChanges: ThreadedQueue<() -> Void> = ThreadedQueue<() -> Void>()
+    private lazy var changeOperationQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        return queue
+    }()
+//    private lazy var changeGroups: ThreadedQueue<ChangeGroup> = ThreadedQueue<ChangeGroup>()
+
+    private var currentChangeGroup: ChangeGroup?
+//    private lazy var sectionChanges: ThreadedQueue<() -> Void> = ThreadedQueue<() -> Void>()
+//    private lazy var objectChanges: ThreadedQueue<() -> Void> = ThreadedQueue<() -> Void>()
 
     private var collectionViewUpdatePaused: Bool = false
 }
@@ -70,12 +83,14 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
     }
 
     public func pauseCollectionViewUpdates() {
-        collectionViewUpdatePaused = true
+        changeOperationQueue.isSuspended = true
+//        collectionViewUpdatePaused = true
     }
 
     public func resumeCollectionViewUpdates() {
-        performCollectionViewUpdates()
-        collectionViewUpdatePaused = false
+        changeOperationQueue.isSuspended = false
+//        performCollectionViewUpdates()
+//        collectionViewUpdatePaused = false
     }
 
     /// Returns the `NSFetchedResultsControllerDelegate` object for a collection view.
@@ -89,34 +104,56 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
     private var collectionView: UICollectionView? { cellParentView }
 
     private func performCollectionViewUpdates() {
-      self.collectionView?.performBatchUpdates({ [weak self] in
-          // apply object changes
-          while let objectChange = self?.objectChanges.safeDequeue() {
-            objectChange()
-          }
-
-          // apply section changes
-          while let sectionChange = self?.sectionChanges.safeDequeue() {
-            sectionChange()
-          }
-
-          }, completion: { [weak self] _ in
-              self?.reloadSupplementaryViewsIfNeeded()
-      })
+//      changeOperationQueue.
+//      while let changeGroup = changeGroups.safeDequeue() {
+//        self.collectionView?.performBatchUpdates { [weak self] in
+//          while let objectChange = changeGroup.objectChanges.safeDequeue() {
+//            objectChange()
+//          }
+//
+//          // apply section changes
+//          while let sectionChange = changeGroup.sectionChanges.safeDequeue() {
+//            sectionChange()
+//          }
+//
+//          }, completion: { [weak self] _ in
+//              self?.reloadSupplementaryViewsIfNeeded()
+//
+//        }
+//      }
+//
+//      self.collectionView?.performBatchUpdates({ [weak self] in
+//          // apply object changes
+//          while let objectChange = self?.objectChanges.safeDequeue() {
+//            objectChange()
+//          }
+//
+//          // apply section changes
+//          while let sectionChange = self?.sectionChanges.safeDequeue() {
+//            sectionChange()
+//          }
+//
+//          }, completion: { [weak self] _ in
+//              self?.reloadSupplementaryViewsIfNeeded()
+//      })
     }
 
     private func bridgedCollectionFetchedResultsDelegate() -> BridgedFetchedResultsDelegate {
         let delegate = BridgedFetchedResultsDelegate(
-            willChangeContent: { _ in },
+            willChangeContent: { [unowned self] _ in
+              self.currentChangeGroup = ChangeGroup()
+            },
             didChangeSection: { [unowned self] _, _, sectionIndex, changeType in
 
                 let section = IndexSet(integer: sectionIndex)
-                self.sectionChanges.enqueue { [unowned self] in
+                self.currentChangeGroup?.sectionChanges.enqueue { [unowned self] in
                     switch changeType {
                     case .insert:
+                        debugPrint("sectionChange: insert", section)
                         self.collectionView?.insertSections(section)
 
                     case .delete:
+                        debugPrint("sectionChange: delete", section)
                         self.collectionView?.deleteSections(section)
 
                     default:
@@ -129,21 +166,24 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
                 switch changeType {
                 case .insert:
                     if let insertIndexPath = newIndexPath {
-                        self.objectChanges.enqueue { [unowned self] in
+                        self.currentChangeGroup?.objectChanges.enqueue { [unowned self] in
+                            debugPrint("objectChange: insert", insertIndexPath)
                             self.collectionView?.insertItems(at: [insertIndexPath])
                         }
                     }
 
                 case .delete:
                     if let deleteIndexPath = indexPath {
-                        self.objectChanges.enqueue { [unowned self] in
+                        self.currentChangeGroup?.objectChanges.enqueue { [unowned self] in
+                            debugPrint("objectChange: delete", deleteIndexPath)
                             self.collectionView?.deleteItems(at: [deleteIndexPath])
                         }
                     }
 
                 case .update:
                     if let indexPath = indexPath {
-                        self.objectChanges.enqueue { [unowned self] in
+                        self.currentChangeGroup?.objectChanges.enqueue { [unowned self] in
+                            debugPrint("objectChange: update", indexPath)
                             if let item = anyObject as? Item,
                                 let collectionView = self.collectionView,
                                 let cell = collectionView.cellForItem(at: indexPath) as? CellConfig.View {
@@ -154,7 +194,8 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
 
                 case .move:
                     if let old = indexPath, let new = newIndexPath {
-                        self.objectChanges.enqueue { [unowned self] in
+                        self.currentChangeGroup?.objectChanges.enqueue { [unowned self] in
+                            debugPrint("objectChange: move", old, new)
                             self.collectionView?.deleteItems(at: [old])
                             self.collectionView?.insertItems(at: [new])
                         }
@@ -164,20 +205,25 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
                 }
             },
             didChangeContent: { [unowned self] _ in
+              guard
+                let changeGroup = currentChangeGroup,
+                let collectionView = self.collectionView
+              else { return }
 
-                if self.collectionViewUpdatePaused { return }
+              let changeOperation = CollectionViewUpdateOperation(
+                collectionView: collectionView, changeGroup: changeGroup
+              )
 
-                self.performCollectionViewUpdates()
-
+              changeOperationQueue.addOperation(changeOperation)
         })
 
         return delegate
     }
 
     private func reloadSupplementaryViewsIfNeeded() {
-        if !sectionChanges.isEmpty {
-            collectionView?.reloadData()
-        }
+//        if !currentChangeGroup?.sectionChanges.isEmpty {
+//            collectionView?.reloadData()
+//        }
     }
 }
 
