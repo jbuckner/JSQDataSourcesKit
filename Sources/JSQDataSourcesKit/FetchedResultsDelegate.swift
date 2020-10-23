@@ -89,19 +89,23 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
     private var collectionView: UICollectionView? { cellParentView }
 
     private func performCollectionViewUpdates() {
+      let hasSectionChanges = sectionChanges.count > 0
       self.collectionView?.performBatchUpdates({ [weak self] in
           // apply object changes
           while let objectChange = self?.objectChanges.safeDequeue() {
-            objectChange()
+              objectChange()
           }
 
           // apply section changes
           while let sectionChange = self?.sectionChanges.safeDequeue() {
-            sectionChange()
+              sectionChange()
           }
 
           }, completion: { [weak self] _ in
-              self?.reloadSupplementaryViewsIfNeeded()
+              // reloads the supplementary views
+              if hasSectionChanges {
+                  self?.collectionView?.reloadData()
+              }
       })
     }
 
@@ -172,12 +176,6 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
         })
 
         return delegate
-    }
-
-    private func reloadSupplementaryViewsIfNeeded() {
-        if !sectionChanges.isEmpty {
-            collectionView?.reloadData()
-        }
     }
 }
 
