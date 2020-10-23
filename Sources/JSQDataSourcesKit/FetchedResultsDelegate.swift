@@ -89,7 +89,6 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
     private var collectionView: UICollectionView? { cellParentView }
 
     private func performCollectionViewUpdates() {
-      let hasSectionChanges = sectionChanges.count > 0
       self.collectionView?.performBatchUpdates({ [weak self] in
           // apply object changes
           while let objectChange = self?.objectChanges.safeDequeue() {
@@ -100,12 +99,7 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
           while let sectionChange = self?.sectionChanges.safeDequeue() {
               sectionChange()
           }
-
-      }, completion: { [weak self] _ in
-          // reloads the supplementary views if there's been any section changes
-          if hasSectionChanges {
-              self?.collectionView?.reloadData()
-          }
+      }, completion: { _ in
       })
     }
 
