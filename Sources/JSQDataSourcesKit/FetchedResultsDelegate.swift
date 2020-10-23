@@ -101,11 +101,11 @@ extension FetchedResultsDelegateProvider where CellConfig.View.ParentView == UIC
               sectionChange()
           }
 
-          }, completion: { [weak self] _ in
-              // reloads the supplementary views
-              if hasSectionChanges {
-                  self?.collectionView?.reloadData()
-              }
+      }, completion: { [weak self] _ in
+          // reloads the supplementary views if there's been any section changes
+          if hasSectionChanges {
+              self?.collectionView?.reloadData()
+          }
       })
     }
 
