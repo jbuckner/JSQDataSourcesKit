@@ -29,8 +29,6 @@
 		886EC7C01CFF2E5F00BDE6FA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 886EC7AE1CFF2E5F00BDE6FA /* ViewController.swift */; };
 		88AD28A61D1F97BC000492FC /* ExampleModel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88AD28A31D1F97A3000492FC /* ExampleModel.framework */; };
 		88AD28A71D1F97BC000492FC /* ExampleModel.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 88AD28A31D1F97A3000492FC /* ExampleModel.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		88DCAD911CB87E6700C018AF /* JSQDataSourcesKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88DCAD8E1CB87DD900C018AF /* JSQDataSourcesKit.framework */; };
-		88DCAD921CB87E6700C018AF /* JSQDataSourcesKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 88DCAD8E1CB87DD900C018AF /* JSQDataSourcesKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BF21124D1D46663600F1840A /* ComposedCellViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF21124C1D46663600F1840A /* ComposedCellViewConfig.swift */; };
 		BF5C03641D3FED6700CA3EA3 /* FancyCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF5C03631D3FED6700CA3EA3 /* FancyCollectionViewCell.xib */; };
 		BF5C03691D3FED7F00CA3EA3 /* FancyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5C03681D3FED7F00CA3EA3 /* FancyCollectionViewCell.swift */; };
@@ -73,27 +71,6 @@
 			remoteGlobalIDString = 88AD286F1D1F9621000492FC;
 			remoteInfo = ExampleModel;
 		};
-		88DCAD8D1CB87DD900C018AF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 88DCAD881CB87DD900C018AF /* JSQDataSourcesKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 887DD0841B3BAC6C00FC4BF1;
-			remoteInfo = JSQDataSourcesKit;
-		};
-		88DCAD8F1CB87DD900C018AF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 88DCAD881CB87DD900C018AF /* JSQDataSourcesKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 887DD08E1B3BAC6C00FC4BF1;
-			remoteInfo = JSQDataSourcesKitTests;
-		};
-		88DCAD931CB87E6700C018AF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 88DCAD881CB87DD900C018AF /* JSQDataSourcesKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 887DD0831B3BAC6C00FC4BF1;
-			remoteInfo = JSQDataSourcesKit;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -103,7 +80,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				88DCAD921CB87E6700C018AF /* JSQDataSourcesKit.framework in Embed Frameworks */,
 				88AD28A71D1F97BC000492FC /* ExampleModel.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -138,7 +114,7 @@
 		887863341B3699C800E2F51C /* ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		88AD289D1D1F97A3000492FC /* ExampleModel.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ExampleModel.xcodeproj; path = ExampleModel/ExampleModel.xcodeproj; sourceTree = "<group>"; };
 		88DB89C11A86D1A900DED153 /* DataSources.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DataSources.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		88DCAD881CB87DD900C018AF /* JSQDataSourcesKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JSQDataSourcesKit.xcodeproj; path = ../JSQDataSourcesKit.xcodeproj; sourceTree = "<group>"; };
+		960271CC252C22FA00C67242 /* JSQDataSourcesKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = JSQDataSourcesKit; path = ..; sourceTree = "<group>"; };
 		BF21124C1D46663600F1840A /* ComposedCellViewConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposedCellViewConfig.swift; sourceTree = "<group>"; };
 		BF5C03631D3FED6700CA3EA3 /* FancyCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FancyCollectionViewCell.xib; sourceTree = "<group>"; };
 		BF5C03681D3FED7F00CA3EA3 /* FancyCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FancyCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -164,7 +140,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				88DCAD911CB87E6700C018AF /* JSQDataSourcesKit.framework in Frameworks */,
 				88AD28A61D1F97BC000492FC /* ExampleModel.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -236,7 +211,7 @@
 				886EC7941CFF2DD200BDE6FA /* UITests */,
 				88DB89C21A86D1A900DED153 /* Products */,
 				88AD289D1D1F97A3000492FC /* ExampleModel.xcodeproj */,
-				88DCAD881CB87DD900C018AF /* JSQDataSourcesKit.xcodeproj */,
+				960271CC252C22FA00C67242 /* JSQDataSourcesKit */,
 			);
 			sourceTree = "<group>";
 		};
@@ -246,15 +221,6 @@
 				88DB89C11A86D1A900DED153 /* DataSources.app */,
 				887863341B3699C800E2F51C /* ExampleTests.xctest */,
 				886EC7811CFF2C8400BDE6FA /* ExampleUITests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		88DCAD891CB87DD900C018AF /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				88DCAD8E1CB87DD900C018AF /* JSQDataSourcesKit.framework */,
-				88DCAD901CB87DD900C018AF /* JSQDataSourcesKit-Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -310,7 +276,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				88DCAD941CB87E6700C018AF /* PBXTargetDependency */,
 				88AD28A91D1F97BC000492FC /* PBXTargetDependency */,
 			);
 			name = Example;
@@ -364,10 +329,6 @@
 					ProductGroup = 88AD289E1D1F97A3000492FC /* Products */;
 					ProjectRef = 88AD289D1D1F97A3000492FC /* ExampleModel.xcodeproj */;
 				},
-				{
-					ProductGroup = 88DCAD891CB87DD900C018AF /* Products */;
-					ProjectRef = 88DCAD881CB87DD900C018AF /* JSQDataSourcesKit.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -391,20 +352,6 @@
 			fileType = wrapper.cfbundle;
 			path = ExampleModelTests.xctest;
 			remoteRef = 88AD28A41D1F97A3000492FC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		88DCAD8E1CB87DD900C018AF /* JSQDataSourcesKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = JSQDataSourcesKit.framework;
-			remoteRef = 88DCAD8D1CB87DD900C018AF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		88DCAD901CB87DD900C018AF /* JSQDataSourcesKit-Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "JSQDataSourcesKit-Tests.xctest";
-			remoteRef = 88DCAD8F1CB87DD900C018AF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -496,11 +443,6 @@
 			isa = PBXTargetDependency;
 			name = ExampleModel;
 			targetProxy = 88AD28A81D1F97BC000492FC /* PBXContainerItemProxy */;
-		};
-		88DCAD941CB87E6700C018AF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = JSQDataSourcesKit;
-			targetProxy = 88DCAD931CB87E6700C018AF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -719,6 +661,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hexedbits.$(PRODUCT_NAME)";
 				PRODUCT_MODULE_NAME = Example;
@@ -736,6 +679,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.hexedbits.$(PRODUCT_NAME)";
 				PRODUCT_MODULE_NAME = Example;

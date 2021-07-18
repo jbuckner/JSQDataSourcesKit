@@ -17,7 +17,6 @@
 //
 
 import CoreData
-import ExampleModel
 import Foundation
 import JSQDataSourcesKit
 import UIKit
